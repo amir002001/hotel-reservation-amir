@@ -5,5 +5,8 @@ go_library(
     srcs = ["user-handler.go"],
     importpath = "hotel-amir/api",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_gofiber_fiber_v2//:go_default_library"],
+    deps = [
+        "//types",
+        "@com_github_gofiber_fiber_v2//:fiber",
+    ],
 )

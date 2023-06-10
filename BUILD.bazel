@@ -4,6 +4,16 @@ load("@bazel_gazelle//:def.bzl", "gazelle")
 # gazelle:prefix hotel-amir
 gazelle(name = "gazelle")
 
+gazelle(
+    name = "gazelle-update-repos",
+    args = [
+        "-from_file=go.mod",
+        "-to_macro=deps.bzl%go_dependencies",
+        "-prune",
+    ],
+    command = "update-repos",
+)
+
 go_library(
     name = "hotel-amir_lib",
     srcs = ["main.go"],
@@ -11,7 +21,10 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//api",
-        "@com_github_gofiber_fiber_v2//:go_default_library",
+        "//types",
+        "@com_github_gofiber_fiber_v2//:fiber",
+        "@org_mongodb_go_mongo_driver//mongo",
+        "@org_mongodb_go_mongo_driver//mongo/options",
     ],
 )
 
