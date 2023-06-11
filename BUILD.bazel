@@ -21,7 +21,7 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//api",
-        "//types",
+        "//db",
         "@com_github_gofiber_fiber_v2//:fiber",
         "@org_mongodb_go_mongo_driver//mongo",
         "@org_mongodb_go_mongo_driver//mongo/options",

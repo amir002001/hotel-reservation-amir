@@ -6,7 +6,7 @@ go_library(
     importpath = "hotel-amir/api",
     visibility = ["//visibility:public"],
     deps = [
-        "//types",
+        "//db",
         "@com_github_gofiber_fiber_v2//:fiber",
     ],
 )
