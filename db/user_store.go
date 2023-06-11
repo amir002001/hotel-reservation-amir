@@ -9,8 +9,8 @@ import (
 )
 
 type UserStore interface {
-	GetUserById(string) (*types.User, error)
-	GetAllUsers() ([]types.User, error)
+	GetUserById(context.Context, string) (*types.User, error)
+	GetAllUsers(context.Context) ([]types.User, error)
 }
 
 type MongoUserStore struct {
@@ -23,12 +23,15 @@ func NewMongoUserStore(userCollection *mongo.Collection) *MongoUserStore {
 	}
 }
 
-func (store *MongoUserStore) GetUserById(idString string) (*types.User, error) {
+func (store *MongoUserStore) GetUserById(
+	ctx context.Context,
+	idString string,
+) (*types.User, error) {
 	id, err := CreateObjectId(idString)
 	if err != nil {
 		return nil, err
 	}
-	result := store.userCollection.FindOne(context.TODO(), bson.M{"_id": id})
+	result := store.userCollection.FindOne(ctx, bson.M{"_id": id})
 	if err := result.Err(); err != nil {
 		return nil, err
 	}
@@ -39,15 +42,15 @@ func (store *MongoUserStore) GetUserById(idString string) (*types.User, error) {
 	return &user, nil
 }
 
-func (store *MongoUserStore) GetAllUsers() ([]types.User, error) {
+func (store *MongoUserStore) GetAllUsers(ctx context.Context) ([]types.User, error) {
 	users := []types.User{}
 
-	cursor, err := store.userCollection.Find(context.TODO(), bson.D{})
+	cursor, err := store.userCollection.Find(ctx, bson.D{})
 	if err != nil {
 		return nil, err
 	}
 
-	for cursor.Next(context.TODO()) {
+	for cursor.Next(ctx) {
 		var user types.User
 		if err := cursor.Decode(&user); err != nil {
 			return nil, err
