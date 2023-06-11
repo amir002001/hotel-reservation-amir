@@ -26,10 +26,13 @@ func main() {
 	app := fiber.New()
 	apiV1 := app.Group("/api/v1")
 
-	userStore := db.NewMongoUserStore(userCollection)
-	userHandler := api.NewUserHandler(userStore)
+	mongoUserStore := db.NewMongoUserStore(userCollection)
+	userHandler := api.NewUserHandler(mongoUserStore)
 	apiV1.Get("/user", userHandler.HandleGetUsers)
 	apiV1.Get("/user/:id", userHandler.HandleGetUserById)
+	apiV1.Post("/user", userHandler.HandleCreateUser)
+	apiV1.Delete("/user/:id", userHandler.HandleDeleteUser)
+	apiV1.Put("/user/:id", userHandler.HandleUpdateUser)
 
 	err = app.Listen(*listenAddr)
 	if err != nil {
